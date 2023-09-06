@@ -76,11 +76,15 @@ public class RESful {
         }
     }
     @GetMapping("/postbycate/{id}")
-    public List<Post> postbycate(@PathVariable Long id) {
+    public ResponseEntity<Iterable<Post>> postbycate(@PathVariable Long id) {
         Category category = new Category();
         category.setId(id);
 
-        return categoryRepository.findPostByCategory(category);
+        List<Post> posts =  categoryRepository.findPostByCategory(category);
+        if (posts.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(posts, HttpStatus.OK);
      }
 
     @PostMapping("/post")
